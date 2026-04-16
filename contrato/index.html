@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contrato Onion Sys - Gerador</title>
+    <style>
+        /* CONFIGURAÇÕES DE PÁGINA PARA PDF (WEASYPRINT) */
+        @page {
+            size: A4;
+            margin: 0; /* Margem zero para controlar o layout via CSS */
+            @bottom-right {
+                content: "";
+                background-image: url('logo-rodape.png');
+                background-size: contain;
+                background-repeat: no-repeat;
+                height: 40px;
+                width: 40px;
+                margin-bottom: 20px;
+                margin-right: 20px;
+            }
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            color: #333;
+            line-height: 1.6;
+            display: flex; /* Sidebar layout */
+        }
+
+        /* BARRA LATERAL - DADOS DO NEGÓCIO */
+        .sidebar {
+            width: 250px;
+            background-color: #2c3e50;
+            color: white;
+            padding: 40px 20px;
+            height: 100vh;
+            position: fixed;
+            font-size: 9pt;
+        }
+
+        .sidebar h3 {
+            color: #16a085;
+            text-transform: uppercase;
+            font-size: 10pt;
+            border-bottom: 1px solid #16a085;
+            padding-bottom: 5px;
+        }
+
+        .sidebar-item {
+            margin-bottom: 20px;
+        }
+
+        .sidebar-item label {
+            display: block;
+            font-weight: bold;
+            color: #bdc3c7;
+        }
+
+        /* CONTEÚDO PRINCIPAL (CONTRATO) */
+        .main-content {
+            margin-left: 290px; /* Largura da sidebar + respiro */
+            padding: 50px 50px 50px 20px;
+            background-color: white;
+            min-height: 100vh;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .header img {
+            max-width: 250px;
+            margin-bottom: 10px;
+        }
+
+        .header h1 {
+            font-size: 16pt;
+            color: #2c3e50;
+            margin: 0;
+            text-transform: uppercase;
+        }
+
+        /* ESTILIZAÇÃO JURÍDICA */
+        .contract-section {
+            margin-bottom: 25px;
+        }
+
+        h2 {
+            font-size: 12pt;
+            color: #16a085;
+            border-left: 4px solid #16a085;
+            padding-left: 10px;
+            text-transform: uppercase;
+            margin-top: 30px;
+        }
+
+        .parties-box {
+            background-color: #f8f9fa;
+            border: 1px solid #e9ecef;
+            padding: 20px;
+            border-radius: 5px;
+        }
+
+        .highlight {
+            font-weight: bold;
+        }
+
+        /* ASSINATURAS DINÂMICAS */
+        .signature-container {
+            margin-top: 60px;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 40px;
+            page-break-inside: avoid;
+        }
+
+        .signature-block {
+            text-align: center;
+            border-top: 1px solid #333;
+            padding-top: 10px;
+            font-size: 9pt;
+        }
+
+        /* UTILITÁRIOS */
+        .page-break { page-break-before: always; }
+    </style>
+</head>
+<body>
+
+    <div class="sidebar">
+        <div class="header-sidebar">
+            <h3>Resumo Comercial</h3>
+        </div>
+        
+        <div class="sidebar-item">
+            <label>Projeto:</label>
+            <span>Onion Sys v2026</span>
+        </div>
+
+        <div class="sidebar-item">
+            <label>Valor Implantação:</label>
+            <span>R$ 25.000,00</span>
+        </div>
+
+        <div class="sidebar-item">
+            <label>Mensalidade:</label>
+            <span>R$ 1.000,00 / CNPJ</span>
+        </div>
+
+        <div class="sidebar-item">
+            <label>Terminais Inclusos:</label>
+            <span>15 Máquinas</span>
+        </div>
+    </div>
+
+    <div class="main-content">
+        
+        <div class="header">
+            <img src="logo.png" alt="Onion Sys Logo">
+            <h1>Contrato de Licença de Uso e Prestação de Serviços</h1>
+        </div>
+
+        <div class="contract-section">
+            <div class="parties-box">
+                <p><span class="highlight">CONTRATADO:</span> <strong>Robson Fernando Costa De Oliveira 36421493831</strong>, CNPJ nº 45.153.364/0001-40, com sede em São Paulo/SP.</p>
+                
+                <hr>
+                
+                <p><span class="highlight">CONTRATANTE 01:</span> [Razão Social Empresa 1], CNPJ nº [00.000.000/0001-00], situada em [Endereço Completo].</p>
+                
+                <p><span class="highlight">CONTRATANTE 02:</span> [Razão Social Empresa 2], CNPJ nº [00.000.000/0001-00], situada em [Endereço Completo].</p>
+                
+                <p><em>Referidas coletivamente como "CONTRATANTES".</em></p>
+            </div>
+        </div>
+
+        <h2>1. Objeto e Licenciamento</h2>
+        <p>1.1. Licenciamento de uso do software <span class="highlight">Onion Sys</span> e serviços de implantação para gestão de produção, estoque e painéis operacionais.</p>
+        <p>1.2. O software é de propriedade exclusiva do CONTRATADO, sendo vedada qualquer forma de revenda ou engenharia reversa pelas CONTRATANTES.</p>
+
+        <h2>2. Valores e Condições (Editáveis)</h2>
+        <p>2.1. <strong>Implantação:</strong> O valor total é de <span class="highlight">R$ 25.000,00</span>, pago em 4 parcelas quinzenais de R$ 6.250,00.</p>
+        <p>2.2. <strong>Mensalidade:</strong> Taxa de suporte e atualizações de <span class="highlight">R$ 1.000,00</span> por CNPJ ativo, vencendo todo dia 10.</p>
+        <p>2.3. <strong>Terminais:</strong> Estão inclusos até 15 terminais. Cada terminal extra terá acréscimo de R$ 150,00/mês.</p>
+
+        <h2>3. Suporte e SLA</h2>
+        <p>3.1. Suporte remoto via WhatsApp/Acesso Remoto em horário comercial (09h às 18h).</p>
+        <p>3.2. Prazo de carência de 60 dias sem cobrança de mensalidade após o início da implantação prevista para 27/04/2026.</p>
+
+        <h2>4. Proteção e Rescisão</h2>
+        <p>4.1. Em caso de cancelamento da mensalidade, o sistema permanece ativo na versão atual, porém sem suporte técnico ou atualizações de segurança.</p>
+        <p>4.2. Aviso prévio de 30 dias para interrupção de serviços de suporte.</p>
+
+        <div class="signature-container">
+            <div class="signature-block">
+                CONTRATANTE 01<br>
+                [Razão Social Empresa 1]
+            </div>
+            
+            <div class="signature-block">
+                CONTRATANTE 02<br>
+                [Razão Social Empresa 2]
+            </div>
+
+            <div class="signature-block" style="grid-column: span 2; max-width: 300px; margin: 40px auto 0;">
+                CONTRATADO<br>
+                Robson Fernando Costa De Oliveira<br>
+                CNPJ: 45.153.364/0001-40
+            </div>
+        </div>
+
+    </div>
+</body>
+</html>
