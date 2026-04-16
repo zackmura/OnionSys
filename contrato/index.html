@@ -56,7 +56,7 @@
             color: #bdc3c7;
         }
 
-        .input-group input {
+        .input-group input, .input-group select {
             width: 100%;
             padding: 8px;
             border: 1px solid #34495e;
@@ -64,6 +64,7 @@
             background-color: #2c3e50;
             color: white;
             box-sizing: border-box;
+            font-family: inherit;
         }
 
         .empresa-box {
@@ -104,6 +105,7 @@
             box-sizing: border-box;
             max-width: 210mm; /* Tamanho A4 */
             box-shadow: 0 0 15px rgba(0,0,0,0.1);
+            position: relative;
         }
 
         .header { text-align: center; margin-bottom: 40px; }
@@ -121,6 +123,9 @@
         .signature-box { width: 45%; text-align: center; margin-bottom: 30px; }
         .signature-line { border-top: 1px solid #333; padding-top: 5px; font-size: 9pt; font-weight: bold; }
 
+        /* Emblema Rodapé Oculto na tela */
+        #logo-rodape-print { display: none; }
+
         /* --- REGRAS DE IMPRESSÃO (PDF) --- */
         @media print {
             .no-print, .sidebar { display: none !important; }
@@ -134,16 +139,17 @@
             @page {
                 size: A4;
                 margin: 15mm 20mm;
-                @bottom-right {
-                    content: "";
-                    background-image: url('logo-rodape.png');
-                    background-size: contain;
-                    background-repeat: no-repeat;
-                    height: 15mm;
-                    width: 15mm;
-                    margin-bottom: 5mm;
-                    margin-right: 5mm;
-                }
+            }
+            
+            /* HACK PARA O RODAPÉ REPETIR EM TODAS AS PÁGINAS NO CHROME/EDGE */
+            #logo-rodape-print {
+                display: block;
+                position: fixed;
+                bottom: 5mm;
+                right: 5mm;
+                width: 15mm;
+                height: 15mm;
+                z-index: 1000;
             }
         }
     </style>
@@ -153,28 +159,39 @@
     <div class="sidebar no-print">
         <h2 style="color: white; border: none; padding:0; margin-top:0;">Configurações</h2>
         
-        <h3>Valores do Negócio</h3>
+        <h3>Financeiro</h3>
         <div class="input-group">
-            <label>Valor Total da Implantação</label>
-            <input type="text" id="inp-valor-total" value="R$ 25.000,00 (vinte e cinco mil reais)" oninput="updateVar('var-valor-total', this.value)">
+            <label>Valor Total Implantação (R$)</label>
+            <input type="number" id="inp-valor-total" value="25000" oninput="calcularFinanceiro()">
         </div>
         <div class="input-group">
-            <label>Valor da Parcela (ex: 4x de R$ 6.250,00)</label>
-            <input type="text" id="inp-parcela" value="4 (quatro) parcelas iguais de R$ 6.250,00" oninput="updateVar('var-parcela', this.value)">
+            <label>Nº de Parcelas</label>
+            <select id="inp-qtd-parcelas" onchange="calcularFinanceiro()">
+                <option value="1">1x (À Vista)</option>
+                <option value="2">2x</option>
+                <option value="3">3x</option>
+                <option value="4" selected>4x</option>
+                <option value="5">5x</option>
+                <option value="6">6x</option>
+            </select>
         </div>
         <div class="input-group">
-            <label>Mensalidade</label>
-            <input type="text" id="inp-mensalidade" value="R$ 1.000,00 (mil reais)" oninput="updateVar('var-mensalidade', this.value)">
+            <label>Intervalo de dias (Parcelas)</label>
+            <input type="number" id="inp-intervalo-dias" value="15" oninput="calcularFinanceiro()">
+        </div>
+        <div class="input-group">
+            <label>Mensalidade Manutenção (R$)</label>
+            <input type="number" id="inp-mensalidade" value="1000" oninput="calcularFinanceiro()">
         </div>
 
         <h3>Operacional</h3>
         <div class="input-group">
             <label>Terminais Inclusos</label>
-            <input type="text" id="inp-terminais" value="15 (quinze)" oninput="updateVar('var-terminais', this.value)">
+            <input type="number" id="inp-terminais" value="15" oninput="updateOperacional()">
         </div>
         <div class="input-group">
-            <label>Valor Terminal Extra</label>
-            <input type="text" id="inp-terminal-extra" value="R$ 150,00" oninput="updateVar('var-terminal-extra', this.value)">
+            <label>Valor Terminal Extra (R$)</label>
+            <input type="number" id="inp-terminal-extra" value="150" oninput="updateOperacional()">
         </div>
         <div class="input-group">
             <label>Semana de Implantação</label>
@@ -182,14 +199,15 @@
         </div>
 
         <h3>Contratantes</h3>
-        <div id="lista-empresas">
-            </div>
+        <div id="lista-empresas"></div>
         <button class="btn" onclick="adicionarEmpresa()">+ Adicionar Empresa</button>
 
         <button class="btn btn-print" onclick="window.print()">🖨️ GERAR PDF</button>
     </div>
 
     <div class="main-content">
+        <img src="logo-rodape.png" id="logo-rodape-print" alt="Onion Sys">
+
         <div class="header">
             <img src="logo.png" alt="Onion Sys Logo">
             <h1>Contrato de Licença de Uso de Software e Prestação de Serviços</h1>
@@ -197,8 +215,7 @@
 
         <div class="contract-section">
             <div class="parties-box">
-                <div id="texto-contratantes">
-                    </div>
+                <div id="texto-contratantes"></div>
                 <p>Neste ato representadas em conjunto e doravante denominadas simplesmente <span class="highlight">CONTRATANTES</span>.</p>
                 <hr style="border: 0; border-top: 1px solid #ddd; margin: 15px 0;">
                 <p><span class="highlight">CONTRATADO:</span> Robson Fernando Costa De Oliveira 36421493831, inscrito no CNPJ sob o nº 45.153.364/0001-40, doravante denominado simplesmente <span class="highlight">CONTRATADO</span>.</p>
@@ -216,7 +233,7 @@
 
         <h2>3. VALORES, FATURAMENTO E FORMAS DE PAGAMENTO</h2>
         <p>3.1. Implantação: Pelos serviços de configuração, instalação e treinamento, as CONTRATANTES pagarão ao CONTRATADO o valor total de <strong class="highlight" id="var-valor-total">R$ 25.000,00 (vinte e cinco mil reais)</strong>.</p>
-        <p>3.2. O valor de implantação será quitado em <strong class="highlight" id="var-parcela">4 (quatro) parcelas iguais de R$ 6.250,00</strong>, com intervalo de 15 (quinze) dias entre cada uma. A primeira parcela vence na data de assinatura deste contrato.</p>
+        <p>3.2. O valor de implantação será quitado em <strong class="highlight" id="var-parcela">4 (quatro) parcelas iguais de R$ 6.250,00</strong>, com intervalo de <strong class="highlight" id="var-intervalo-dias">15 (quinze)</strong> dias entre cada uma. A primeira parcela vence na data de assinatura deste contrato.</p>
         <p>3.3. Mensalidade de Manutenção: Para manutenção do licenciamento, suporte técnico e direito a atualizações, será cobrado o valor mensal de <strong class="highlight" id="var-mensalidade">R$ 1.000,00 (mil reais)</strong> por CNPJ cadastrado, com vencimento todo dia 10 de cada mês subsequente ao período de carência (Cláusula 4.1).</p>
         <p>3.4. Em caso de atraso superior a 5 (cinco) dias no pagamento de qualquer obrigação, incidirá multa moratória de 2% (dois por cento) sobre o valor devido, acrescido de juros de mora de 1% (um por cento) ao mês, pro rata die.</p>
         <p>3.5. Os valores das mensalidades serão reajustados anualmente, a cada período de 12 meses contados da assinatura deste contrato, com base no índice IPCA/IBGE acumulado no período, ou outro índice oficial que venha a substituí-lo.</p>
@@ -230,7 +247,7 @@
             <li>Atualizações regulares de estabilidade e novas versões lançadas pelo CONTRATADO.</li>
             <li>Correção preventiva e corretiva de falhas reportadas (bugs).</li>
         </ul>
-        <p>4.4. O plano de licenciamento abrange o uso simultâneo em até <strong id="var-terminais">15 (quinze)</strong> terminais (máquinas/dispositivos) das CONTRATANTES. Terminais excedentes terão o custo de <strong id="var-terminal-extra">R$ 150,00</strong> mensais por unidade adicional.</p>
+        <p>4.4. O plano de licenciamento abrange o uso simultâneo em até <strong id="var-terminais">15 (quinze)</strong> terminais (máquinas/dispositivos) das CONTRATANTES. Terminais excedentes terão o custo de <strong id="var-terminal-extra">R$ 150,00 (cento e cinquenta reais)</strong> mensais por unidade adicional.</p>
         <p>4.5. Interrupção do Plano: Caso as CONTRATANTES optem por cancelar o plano de mensalidade e suporte, o sistema Onion Sys continuará em pleno funcionamento operacional. Contudo, as CONTRATANTES perderão o direito a qualquer tipo de suporte técnico, correções, ajustes de layout e atualizações futuras.</p>
         <p>4.6. Solicitações de atendimento ou customização de escopo que ocorram fora de um plano mensal ativo serão orçadas e cobradas no valor de R$ 150,00 por hora técnica, sujeitas à disponibilidade de agenda do CONTRATADO.</p>
 
@@ -268,35 +285,123 @@
 
         <p style="text-align: left; margin-top: 30px; font-style: italic;">São Paulo - SP, ____ de ___________________ de 2026.</p>
 
-        <div class="signatures" id="area-assinaturas">
-            </div>
-
+        <div class="signatures" id="area-assinaturas"></div>
     </div>
 
     <script>
-        // Função para atualizar textos simples no contrato
+        // --- 1. FUNÇÕES DE CONVERSÃO PARA EXTENSO ---
+        const unidades = ["", "um", "dois", "três", "quatro", "cinco", "seis", "sete", "oito", "nove"];
+        const dezenas = ["", "dez", "vinte", "trinta", "quarenta", "cinquenta", "sessenta", "setenta", "oitenta", "noventa"];
+        const especiais = ["dez", "onze", "doze", "treze", "quatorze", "quinze", "dezesseis", "dezessete", "dezoito", "dezenove"];
+        const centenas = ["", "cem", "duzentos", "trezentos", "quatrocentos", "quinhentos", "seiscentos", "setecentos", "oitocentos", "novecentos"];
+
+        function numeroParaExtenso(numero, monetario = false) {
+            if (numero === 0) return monetario ? "zero reais" : "zero";
+            
+            let valorStr = numero.toFixed(2);
+            let reais = parseInt(valorStr.split('.')[0]);
+            let centavos = parseInt(valorStr.split('.')[1]);
+            
+            function converterBloco(n) {
+                if (n === 0) return "";
+                if (n === 100) return "cem";
+                let str = "";
+                let c = Math.floor(n / 100);
+                let d = Math.floor((n % 100) / 10);
+                let u = n % 10;
+                
+                if (c > 0) str += centenas[c] + (c === 1 && n > 100 ? "cento " : " ");
+                if (str !== "" && (d > 0 || u > 0)) str += "e ";
+                
+                if (d === 1) {
+                    str += especiais[u] + " ";
+                } else {
+                    if (d > 1) str += dezenas[d] + " ";
+                    if (d > 1 && u > 0) str += "e ";
+                    if (u > 0 && d !== 1) str += unidades[u] + " ";
+                }
+                return str.trim();
+            }
+
+            let extenso = "";
+            let milhoes = Math.floor(reais / 1000000);
+            let milhares = Math.floor((reais % 1000000) / 1000);
+            let unidadesSimples = reais % 1000;
+
+            if (milhoes > 0) extenso += converterBloco(milhoes) + (milhoes === 1 ? " milhão " : " milhões ");
+            if (milhoes > 0 && milhares === 0 && unidadesSimples > 0) extenso += "e ";
+            if (milhares > 0) extenso += converterBloco(milhares) + " mil ";
+            if (milhares > 0 && unidadesSimples > 0 && unidadesSimples <= 100) extenso += "e ";
+            if (unidadesSimples > 0) extenso += converterBloco(unidadesSimples);
+
+            extenso = extenso.trim();
+
+            if (monetario) {
+                if (reais === 1) extenso += " real";
+                else if (reais > 1) extenso += " reais";
+                
+                if (centavos > 0) {
+                    if (reais > 0) extenso += " e ";
+                    extenso += converterBloco(centavos) + (centavos === 1 ? " centavo" : " centavos");
+                }
+            }
+            return extenso;
+        }
+
+        const formatarMoeda = (valor) => new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(valor);
+
+        // --- 2. LÓGICA DE ATUALIZAÇÃO FINANCEIRA ---
+        function calcularFinanceiro() {
+            let valorTotal = parseFloat(document.getElementById('inp-valor-total').value) || 0;
+            let parcelas = parseInt(document.getElementById('inp-qtd-parcelas').value) || 1;
+            let dias = parseInt(document.getElementById('inp-intervalo-dias').value) || 0;
+            let mensalidade = parseFloat(document.getElementById('inp-mensalidade').value) || 0;
+
+            // 3.1 - Atualiza Valor Total
+            let textoValorTotal = `${formatarMoeda(valorTotal)} (${numeroParaExtenso(valorTotal, true)})`;
+            document.getElementById('var-valor-total').innerText = textoValorTotal;
+
+            // 3.2 - Atualiza Parcelas
+            let valorParcela = valorTotal / parcelas;
+            let textoParcelas = parcelas === 1 
+                ? `1 (uma) parcela à vista de ${formatarMoeda(valorTotal)}`
+                : `${parcelas} (${numeroParaExtenso(parcelas, false)}) parcelas iguais de ${formatarMoeda(valorParcela)}`;
+            document.getElementById('var-parcela').innerText = textoParcelas;
+
+            // Intervalo de Dias
+            document.getElementById('var-intervalo-dias').innerText = `${dias} (${numeroParaExtenso(dias, false)})`;
+
+            // 3.3 - Mensalidade
+            let textoMensalidade = `${formatarMoeda(mensalidade)} (${numeroParaExtenso(mensalidade, true)})`;
+            document.getElementById('var-mensalidade').innerText = textoMensalidade;
+        }
+
+        function updateOperacional() {
+            let terminais = parseInt(document.getElementById('inp-terminais').value) || 0;
+            let terminalExtra = parseFloat(document.getElementById('inp-terminal-extra').value) || 0;
+            
+            document.getElementById('var-terminais').innerText = `${terminais} (${numeroParaExtenso(terminais, false)})`;
+            document.getElementById('var-terminal-extra').innerText = `${formatarMoeda(terminalExtra)} (${numeroParaExtenso(terminalExtra, true)})`;
+        }
+
         function updateVar(id, value) {
             document.getElementById(id).innerText = value;
         }
 
-        // Estado das Empresas
+        // --- 3. LÓGICA DAS EMPRESAS (MANTIDA) ---
         let empresas = [
             { razao: "3 Marias", cnpj: "00.000.000/0001-00", endereco: "Rua Exemplo, 123" },
             { razao: "Nina Ritz", cnpj: "11.111.111/0001-11", endereco: "Av. Modelo, 456" }
         ];
 
-        // Atualiza a Interface Lateral, o Texto e as Assinaturas
         function renderEmpresas() {
             const listaInputs = document.getElementById("lista-empresas");
             const textoContrato = document.getElementById("texto-contratantes");
             const assinaturas = document.getElementById("area-assinaturas");
             
-            listaInputs.innerHTML = "";
-            textoContrato.innerHTML = "";
-            let htmlAssinaturas = "";
+            listaInputs.innerHTML = ""; textoContrato.innerHTML = ""; let htmlAssinaturas = "";
 
             empresas.forEach((emp, index) => {
-                // Renderiza Inputs na Sidebar
                 listaInputs.innerHTML += `
                     <div class="empresa-box">
                         <div class="input-group">
@@ -314,55 +419,30 @@
                         <button class="btn btn-remove" onclick="removerEmpresa(${index})">Remover</button>
                     </div>
                 `;
-
-                // Renderiza Texto no Contrato
-                textoContrato.innerHTML += `
-                    <p><span class="highlight">CONTRATANTE ${index + 1}:</span> ${emp.razao}, inscrita no CNPJ sob o nº ${emp.cnpj}, com sede em ${emp.endereco}.</p>
-                `;
-
-                // Monta bloco de assinatura
+                textoContrato.innerHTML += `<p><span class="highlight">CONTRATANTE ${index + 1}:</span> ${emp.razao}, inscrita no CNPJ sob o nº ${emp.cnpj}, com sede em ${emp.endereco}.</p>`;
                 htmlAssinaturas += `
                     <div class="signature-box">
-                        <div class="signature-line">
-                            CONTRATANTE ${index + 1}<br>
-                            ${emp.razao}<br>
-                            CNPJ: ${emp.cnpj}
-                        </div>
-                    </div>
-                `;
+                        <div class="signature-line">CONTRATANTE ${index + 1}<br>${emp.razao}<br>CNPJ: ${emp.cnpj}</div>
+                    </div>`;
             });
 
-            // Adiciona a assinatura fixa do CONTRATADO no final da grade
             htmlAssinaturas += `
                 <div class="signature-box" style="margin: 0 auto;">
-                    <div class="signature-line">
-                        CONTRATADO<br>
-                        Robson F. Costa De Oliveira<br>
-                        CNPJ: 45.153.364/0001-40
-                    </div>
-                </div>
-            `;
+                    <div class="signature-line">CONTRATADO<br>Robson F. Costa De Oliveira<br>CNPJ: 45.153.364/0001-40</div>
+                </div>`;
             assinaturas.innerHTML = htmlAssinaturas;
         }
 
-        // Funções de manipulação do Array
-        function editEmpresa(index, field, value) {
-            empresas[index][field] = value;
-            renderEmpresas();
-        }
+        function editEmpresa(i, f, v) { empresas[i][f] = v; renderEmpresas(); }
+        function adicionarEmpresa() { empresas.push({ razao: "Nova", cnpj: "00", endereco: "End" }); renderEmpresas(); }
+        function removerEmpresa(i) { empresas.splice(i, 1); renderEmpresas(); }
 
-        function adicionarEmpresa() {
-            empresas.push({ razao: "Nova Empresa", cnpj: "00.000.000/0001-00", endereco: "Endereço" });
+        // Inicializa
+        window.onload = () => {
             renderEmpresas();
-        }
-
-        function removerEmpresa(index) {
-            empresas.splice(index, 1);
-            renderEmpresas();
-        }
-
-        // Renderiza tudo ao carregar a página
-        window.onload = renderEmpresas;
+            calcularFinanceiro();
+            updateOperacional();
+        };
     </script>
 </body>
 </html>
