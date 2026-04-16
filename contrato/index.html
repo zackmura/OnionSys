@@ -3,22 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Contrato Onion Sys - Gerador</title>
+    <title>Gerador de Contrato - Onion Sys</title>
     <style>
-        /* CONFIGURAÇÕES DE PÁGINA PARA PDF (WEASYPRINT) */
-        @page {
-            size: A4;
-            margin: 0; /* Margem zero para controlar o layout via CSS */
-            @bottom-right {
-                content: "";
-                background-image: url('logo-rodape.png');
-                background-size: contain;
-                background-repeat: no-repeat;
-                height: 40px;
-                width: 40px;
-                margin-bottom: 20px;
-                margin-right: 20px;
-            }
+        :root {
+            --primary: #2c3e50;
+            --accent: #16a085;
+            --bg-sidebar: #1e2b3c;
+            --text-light: #ecf0f1;
         }
 
         body {
@@ -27,192 +18,351 @@
             padding: 0;
             color: #333;
             line-height: 1.6;
-            display: flex; /* Sidebar layout */
+            display: flex;
+            background-color: #f4f6f9;
         }
 
-        /* BARRA LATERAL - DADOS DO NEGÓCIO */
+        /* --- SIDEBAR CONFIGURAÇÕES --- */
         .sidebar {
-            width: 250px;
-            background-color: #2c3e50;
-            color: white;
-            padding: 40px 20px;
+            width: 320px;
+            background-color: var(--bg-sidebar);
+            color: var(--text-light);
+            padding: 30px 20px;
             height: 100vh;
             position: fixed;
-            font-size: 9pt;
+            overflow-y: auto;
+            box-sizing: border-box;
+            box-shadow: 2px 0 10px rgba(0,0,0,0.1);
         }
 
         .sidebar h3 {
-            color: #16a085;
+            color: var(--accent);
             text-transform: uppercase;
-            font-size: 10pt;
-            border-bottom: 1px solid #16a085;
+            font-size: 11pt;
+            border-bottom: 1px solid var(--accent);
             padding-bottom: 5px;
+            margin-top: 25px;
         }
 
-        .sidebar-item {
-            margin-bottom: 20px;
+        .input-group {
+            margin-bottom: 15px;
         }
 
-        .sidebar-item label {
+        .input-group label {
             display: block;
+            font-size: 9pt;
             font-weight: bold;
+            margin-bottom: 4px;
             color: #bdc3c7;
         }
 
-        /* CONTEÚDO PRINCIPAL (CONTRATO) */
+        .input-group input {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #34495e;
+            border-radius: 4px;
+            background-color: #2c3e50;
+            color: white;
+            box-sizing: border-box;
+        }
+
+        .empresa-box {
+            background: #2c3e50;
+            padding: 10px;
+            margin-bottom: 10px;
+            border-radius: 4px;
+            border-left: 3px solid var(--accent);
+        }
+
+        .btn {
+            background-color: var(--accent);
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            width: 100%;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: bold;
+            text-transform: uppercase;
+            margin-top: 10px;
+            transition: 0.2s;
+        }
+
+        .btn:hover { background-color: #12876f; }
+        .btn-remove { background-color: #e74c3c; margin-top: 5px; padding: 5px; font-size: 8pt;}
+        .btn-remove:hover { background-color: #c0392b; }
+        .btn-print { background-color: #3498db; font-size: 11pt; margin-top: 30px; padding: 15px;}
+        .btn-print:hover { background-color: #2980b9; }
+
+        /* --- CONTEÚDO DO CONTRATO --- */
         .main-content {
-            margin-left: 290px; /* Largura da sidebar + respiro */
-            padding: 50px 50px 50px 20px;
+            margin-left: 320px;
+            padding: 15mm 20mm 25mm 20mm;
             background-color: white;
             min-height: 100vh;
+            width: 100%;
+            box-sizing: border-box;
+            max-width: 210mm; /* Tamanho A4 */
+            box-shadow: 0 0 15px rgba(0,0,0,0.1);
         }
 
-        .header {
-            text-align: center;
-            margin-bottom: 40px;
-        }
+        .header { text-align: center; margin-bottom: 40px; }
+        .header img { max-height: 80px; width: auto; margin-bottom: 10px; }
+        .header h1 { font-size: 14pt; color: var(--primary); margin: 0; text-transform: uppercase; }
 
-        .header img {
-            max-width: 250px;
-            margin-bottom: 10px;
-        }
+        .contract-section p { text-align: justify; margin: 8px 0; }
+        .parties-box { background-color: #f8f9fa; border: 1px solid #e9ecef; padding: 20px; border-radius: 5px; margin-bottom: 25px;}
+        .highlight { font-weight: bold; color: var(--primary); }
 
-        .header h1 {
-            font-size: 16pt;
-            color: #2c3e50;
-            margin: 0;
-            text-transform: uppercase;
-        }
+        h2 { font-size: 11pt; color: var(--accent); border-left: 3px solid var(--accent); padding-left: 8px; text-transform: uppercase; margin-top: 25px; margin-bottom: 10px;}
 
-        /* ESTILIZAÇÃO JURÍDICA */
-        .contract-section {
-            margin-bottom: 25px;
-        }
+        /* --- ASSINATURAS --- */
+        .signatures { margin-top: 50px; display: flex; flex-wrap: wrap; justify-content: space-between; gap: 20px; page-break-inside: avoid; }
+        .signature-box { width: 45%; text-align: center; margin-bottom: 30px; }
+        .signature-line { border-top: 1px solid #333; padding-top: 5px; font-size: 9pt; font-weight: bold; }
 
-        h2 {
-            font-size: 12pt;
-            color: #16a085;
-            border-left: 4px solid #16a085;
-            padding-left: 10px;
-            text-transform: uppercase;
-            margin-top: 30px;
+        /* --- REGRAS DE IMPRESSÃO (PDF) --- */
+        @media print {
+            .no-print, .sidebar { display: none !important; }
+            body { background-color: white; }
+            .main-content { 
+                margin-left: 0; 
+                padding: 0; 
+                box-shadow: none; 
+                max-width: 100%; 
+            }
+            @page {
+                size: A4;
+                margin: 15mm 20mm;
+                @bottom-right {
+                    content: "";
+                    background-image: url('logo-rodape.png');
+                    background-size: contain;
+                    background-repeat: no-repeat;
+                    height: 15mm;
+                    width: 15mm;
+                    margin-bottom: 5mm;
+                    margin-right: 5mm;
+                }
+            }
         }
-
-        .parties-box {
-            background-color: #f8f9fa;
-            border: 1px solid #e9ecef;
-            padding: 20px;
-            border-radius: 5px;
-        }
-
-        .highlight {
-            font-weight: bold;
-        }
-
-        /* ASSINATURAS DINÂMICAS */
-        .signature-container {
-            margin-top: 60px;
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 40px;
-            page-break-inside: avoid;
-        }
-
-        .signature-block {
-            text-align: center;
-            border-top: 1px solid #333;
-            padding-top: 10px;
-            font-size: 9pt;
-        }
-
-        /* UTILITÁRIOS */
-        .page-break { page-break-before: always; }
     </style>
 </head>
 <body>
 
-    <div class="sidebar">
-        <div class="header-sidebar">
-            <h3>Resumo Comercial</h3>
-        </div>
+    <div class="sidebar no-print">
+        <h2 style="color: white; border: none; padding:0; margin-top:0;">Configurações</h2>
         
-        <div class="sidebar-item">
-            <label>Projeto:</label>
-            <span>Onion Sys v2026</span>
+        <h3>Valores do Negócio</h3>
+        <div class="input-group">
+            <label>Valor Total da Implantação</label>
+            <input type="text" id="inp-valor-total" value="R$ 25.000,00 (vinte e cinco mil reais)" oninput="updateVar('var-valor-total', this.value)">
+        </div>
+        <div class="input-group">
+            <label>Valor da Parcela (ex: 4x de R$ 6.250,00)</label>
+            <input type="text" id="inp-parcela" value="4 (quatro) parcelas iguais de R$ 6.250,00" oninput="updateVar('var-parcela', this.value)">
+        </div>
+        <div class="input-group">
+            <label>Mensalidade</label>
+            <input type="text" id="inp-mensalidade" value="R$ 1.000,00 (mil reais)" oninput="updateVar('var-mensalidade', this.value)">
         </div>
 
-        <div class="sidebar-item">
-            <label>Valor Implantação:</label>
-            <span>R$ 25.000,00</span>
+        <h3>Operacional</h3>
+        <div class="input-group">
+            <label>Terminais Inclusos</label>
+            <input type="text" id="inp-terminais" value="15 (quinze)" oninput="updateVar('var-terminais', this.value)">
+        </div>
+        <div class="input-group">
+            <label>Valor Terminal Extra</label>
+            <input type="text" id="inp-terminal-extra" value="R$ 150,00" oninput="updateVar('var-terminal-extra', this.value)">
+        </div>
+        <div class="input-group">
+            <label>Semana de Implantação</label>
+            <input type="text" id="inp-data-impl" value="27 de abril de 2026" oninput="updateVar('var-data-impl', this.value)">
         </div>
 
-        <div class="sidebar-item">
-            <label>Mensalidade:</label>
-            <span>R$ 1.000,00 / CNPJ</span>
-        </div>
+        <h3>Contratantes</h3>
+        <div id="lista-empresas">
+            </div>
+        <button class="btn" onclick="adicionarEmpresa()">+ Adicionar Empresa</button>
 
-        <div class="sidebar-item">
-            <label>Terminais Inclusos:</label>
-            <span>15 Máquinas</span>
-        </div>
+        <button class="btn btn-print" onclick="window.print()">🖨️ GERAR PDF</button>
     </div>
 
     <div class="main-content">
-        
         <div class="header">
             <img src="logo.png" alt="Onion Sys Logo">
-            <h1>Contrato de Licença de Uso e Prestação de Serviços</h1>
+            <h1>Contrato de Licença de Uso de Software e Prestação de Serviços</h1>
         </div>
 
         <div class="contract-section">
             <div class="parties-box">
-                <p><span class="highlight">CONTRATADO:</span> <strong>Robson Fernando Costa De Oliveira 36421493831</strong>, CNPJ nº 45.153.364/0001-40, com sede em São Paulo/SP.</p>
-                
-                <hr>
-                
-                <p><span class="highlight">CONTRATANTE 01:</span> [Razão Social Empresa 1], CNPJ nº [00.000.000/0001-00], situada em [Endereço Completo].</p>
-                
-                <p><span class="highlight">CONTRATANTE 02:</span> [Razão Social Empresa 2], CNPJ nº [00.000.000/0001-00], situada em [Endereço Completo].</p>
-                
-                <p><em>Referidas coletivamente como "CONTRATANTES".</em></p>
+                <div id="texto-contratantes">
+                    </div>
+                <p>Neste ato representadas em conjunto e doravante denominadas simplesmente <span class="highlight">CONTRATANTES</span>.</p>
+                <hr style="border: 0; border-top: 1px solid #ddd; margin: 15px 0;">
+                <p><span class="highlight">CONTRATADO:</span> Robson Fernando Costa De Oliveira 36421493831, inscrito no CNPJ sob o nº 45.153.364/0001-40, doravante denominado simplesmente <span class="highlight">CONTRATADO</span>.</p>
             </div>
         </div>
 
-        <h2>1. Objeto e Licenciamento</h2>
-        <p>1.1. Licenciamento de uso do software <span class="highlight">Onion Sys</span> e serviços de implantação para gestão de produção, estoque e painéis operacionais.</p>
-        <p>1.2. O software é de propriedade exclusiva do CONTRATADO, sendo vedada qualquer forma de revenda ou engenharia reversa pelas CONTRATANTES.</p>
+        <h2>1. OBJETO</h2>
+        <p>1.1. O presente contrato tem como objeto o licenciamento do direito de uso, em caráter não exclusivo e intransferível, do sistema <strong>Onion Sys – Plataforma de Gestão Operacional</strong>, voltado especificamente para o controle de produção em confecção, gestão de estoque, ordens de serviço (OS), compras de aviamentos, relatórios analíticos e painéis de processos.</p>
+        <p>1.2. Faz parte também do objeto deste instrumento a prestação de serviços técnicos de implantação, configuração inicial, instalação e treinamento da equipa das CONTRATANTES para o uso da referida plataforma.</p>
 
-        <h2>2. Valores e Condições (Editáveis)</h2>
-        <p>2.1. <strong>Implantação:</strong> O valor total é de <span class="highlight">R$ 25.000,00</span>, pago em 4 parcelas quinzenais de R$ 6.250,00.</p>
-        <p>2.2. <strong>Mensalidade:</strong> Taxa de suporte e atualizações de <span class="highlight">R$ 1.000,00</span> por CNPJ ativo, vencendo todo dia 10.</p>
-        <p>2.3. <strong>Terminais:</strong> Estão inclusos até 15 terminais. Cada terminal extra terá acréscimo de R$ 150,00/mês.</p>
+        <h2>2. CONDIÇÕES DA LICENÇA DE USO</h2>
+        <p>2.1. O sistema Onion Sys, incluindo seus códigos-fonte, painéis, lógicas de banco de dados e identidade visual, é de propriedade intelectual e direitos autorais exclusivos do CONTRATADO.</p>
+        <p>2.2. É expressamente proibida a cópia, reprodução, engenharia reversa, comercialização, sublicenciamento ou distribuição do software, no todo ou em parte, pelas CONTRATANTES.</p>
+        <p>2.3. O CONTRATADO detém total liberdade comercial para licenciar, instalar e negociar o sistema Onion Sys com outras empresas e terceiros, sem qualquer restrição de exclusividade de mercado ou região.</p>
 
-        <h2>3. Suporte e SLA</h2>
-        <p>3.1. Suporte remoto via WhatsApp/Acesso Remoto em horário comercial (09h às 18h).</p>
-        <p>3.2. Prazo de carência de 60 dias sem cobrança de mensalidade após o início da implantação prevista para 27/04/2026.</p>
+        <h2>3. VALORES, FATURAMENTO E FORMAS DE PAGAMENTO</h2>
+        <p>3.1. Implantação: Pelos serviços de configuração, instalação e treinamento, as CONTRATANTES pagarão ao CONTRATADO o valor total de <strong class="highlight" id="var-valor-total">R$ 25.000,00 (vinte e cinco mil reais)</strong>.</p>
+        <p>3.2. O valor de implantação será quitado em <strong class="highlight" id="var-parcela">4 (quatro) parcelas iguais de R$ 6.250,00</strong>, com intervalo de 15 (quinze) dias entre cada uma. A primeira parcela vence na data de assinatura deste contrato.</p>
+        <p>3.3. Mensalidade de Manutenção: Para manutenção do licenciamento, suporte técnico e direito a atualizações, será cobrado o valor mensal de <strong class="highlight" id="var-mensalidade">R$ 1.000,00 (mil reais)</strong> por CNPJ cadastrado, com vencimento todo dia 10 de cada mês subsequente ao período de carência (Cláusula 4.1).</p>
+        <p>3.4. Em caso de atraso superior a 5 (cinco) dias no pagamento de qualquer obrigação, incidirá multa moratória de 2% (dois por cento) sobre o valor devido, acrescido de juros de mora de 1% (um por cento) ao mês, pro rata die.</p>
+        <p>3.5. Os valores das mensalidades serão reajustados anualmente, a cada período de 12 meses contados da assinatura deste contrato, com base no índice IPCA/IBGE acumulado no período, ou outro índice oficial que venha a substituí-lo.</p>
 
-        <h2>4. Proteção e Rescisão</h2>
-        <p>4.1. Em caso de cancelamento da mensalidade, o sistema permanece ativo na versão atual, porém sem suporte técnico ou atualizações de segurança.</p>
-        <p>4.2. Aviso prévio de 30 dias para interrupção de serviços de suporte.</p>
+        <h2>4. SUPORTE TÉCNICO E ATUALIZAÇÕES</h2>
+        <p>4.1. A implantação contempla um período de carência ("Operação Assistida") de até 60 (sessenta) dias corridos após o início efetivo do uso do sistema, durante o qual o suporte e acompanhamento não terão custos adicionais mensais.</p>
+        <p>4.2. Após o período de 60 dias, os serviços de suporte, correção de eventuais inconsistências e atualizações de melhoria contínua passarão a ser cobertos pela mensalidade estipulada na Cláusula 3.3.</p>
+        <p>4.3. O pacote de suporte mensal ativo abrange:</p>
+        <ul>
+            <li>Atendimento técnico remoto em horário comercial (segunda a sexta-feira, das 09h às 18h).</li>
+            <li>Atualizações regulares de estabilidade e novas versões lançadas pelo CONTRATADO.</li>
+            <li>Correção preventiva e corretiva de falhas reportadas (bugs).</li>
+        </ul>
+        <p>4.4. O plano de licenciamento abrange o uso simultâneo em até <strong id="var-terminais">15 (quinze)</strong> terminais (máquinas/dispositivos) das CONTRATANTES. Terminais excedentes terão o custo de <strong id="var-terminal-extra">R$ 150,00</strong> mensais por unidade adicional.</p>
+        <p>4.5. Interrupção do Plano: Caso as CONTRATANTES optem por cancelar o plano de mensalidade e suporte, o sistema Onion Sys continuará em pleno funcionamento operacional. Contudo, as CONTRATANTES perderão o direito a qualquer tipo de suporte técnico, correções, ajustes de layout e atualizações futuras.</p>
+        <p>4.6. Solicitações de atendimento ou customização de escopo que ocorram fora de um plano mensal ativo serão orçadas e cobradas no valor de R$ 150,00 por hora técnica, sujeitas à disponibilidade de agenda do CONTRATADO.</p>
 
-        <div class="signature-container">
-            <div class="signature-block">
-                CONTRATANTE 01<br>
-                [Razão Social Empresa 1]
+        <h2>5. CRONOGRAMA E DINÂMICA DE IMPLANTAÇÃO</h2>
+        <p>5.1. O início do processo de implantação está agendado para a semana do dia <strong id="var-data-impl">27 de abril de 2026</strong>.</p>
+        <p>5.2. O escopo de implantação abrange: instalação do ambiente do sistema, parametrizações iniciais do banco de dados e ciclo de treinamento da equipa usuária.</p>
+        <p>5.3. Para mitigar o impacto na operação da loja/fábrica, os treinamentos serão realizados preferencialmente aos sábados na fase inicial, ou durante a semana, de acordo com o alinhamento prévio e disponibilidade de ambas as partes.</p>
+        <p>5.4. Atrasos na disponibilização de informações, infraestrutura ou ausência da equipa das CONTRATANTES nas datas de treinamento eximem o CONTRATADO de responsabilidade sobre possíveis atrasos no cronograma final de entrega.</p>
+
+        <h2>6. NÍVEIS DE ATENDIMENTO (SLA)</h2>
+        <p>6.1. O suporte será prestado exclusivamente em dias úteis, em horário comercial, utilizando preferencialmente o canal WhatsApp ou acesso remoto previamente autorizado.</p>
+        <p>6.2. Para garantir agilidade e controle, as solicitações de suporte deverão ser unificadas e reportadas ao CONTRATADO exclusivamente por 1 (um) ou 2 (dois) colaboradores chave, previamente designados pela diretoria das CONTRATANTES.</p>
+        <p>6.3. As demandas serão priorizadas conforme o nível de urgência, sendo paradas totais de sistema classificadas como prioridade máxima frente a dúvidas operacionais.</p>
+
+        <h2>7. RESPONSABILIDADES E LIMITAÇÕES</h2>
+        <p>7.1. Do CONTRATADO: Manter a integridade e disponibilidade do software conforme as especificações contratadas, agindo com diligência na correção de falhas técnicas reportadas.</p>
+        <p>7.2. Das CONTRATANTES: Fornecer hardware (computadores) e infraestrutura de rede (internet local) adequados e compatíveis com as exigências web do sistema, bem como assegurar que sua equipa opere a ferramenta de forma correta, não sendo o CONTRATADO responsável por dados inseridos erroneamente.</p>
+        <p>7.3. O CONTRATADO não será civilmente responsável por eventuais perdas e danos, lucros cessantes ou prejuízos indiretos decorrentes de manutenções programadas, falhas de conexão de internet das CONTRATANTES ou problemas em servidores de hospedagem terceirizados de alta disponibilidade.</p>
+
+        <h2>8. CONFIDENCIALIDADE E TRATAMENTO DE DADOS (LGPD)</h2>
+        <p>8.1. As partes comprometem-se a manter sob sigilo todas as informações comerciais, estratégicas, de produção e dados de clientes que venham a ter acesso em virtude deste contrato.</p>
+        <p>8.2. O CONTRATADO tratará os dados inseridos no sistema pelas CONTRATANTES como estritamente confidenciais, atuando unicamente como operador tecnológico, em conformidade com as diretrizes da Lei Geral de Proteção de Dados (Lei 13.709/2018).</p>
+
+        <h2>9. PRAZOS E RESCISÃO</h2>
+        <p>9.1. O presente instrumento é celebrado por prazo indeterminado, entrando em vigor na data de sua assinatura.</p>
+        <p>9.2. A contratação do suporte mensal poderá ser cancelada a qualquer momento, mediante envio de aviso prévio formal com 30 (trinta) dias de antecedência. O aviso prévio não isenta as CONTRATANTES do pagamento das mensalidades ou faturas ativas vigentes dentro desse período de 30 dias.</p>
+
+        <h2>10. FUNCIONALIDADES SOB DEMANDA (CUSTOMIZAÇÕES)</h2>
+        <p>10.1. Novas funcionalidades, integrações de terceiros ou relatórios que não estejam presentes na arquitetura nativa do sistema na data da implantação serão considerados "Novos Projetos".</p>
+        <p>10.2. Solicitações de Novos Projetos deverão ser documentadas, submetidas a análise de viabilidade técnica pelo CONTRATADO e executadas mediante aprovação prévia de orçamento extra e prazo pelas CONTRATANTES.</p>
+
+        <h2>11. DISPOSIÇÕES FINAIS</h2>
+        <p>11.1. Este contrato tem natureza estritamente comercial, civil e tecnológica, não gerando, sob nenhuma hipótese, qualquer vínculo empregatício, societário ou previdenciário entre as CONTRATANTES, o CONTRATADO ou seus respectivos prepostos e funcionários.</p>
+        <p>11.2. A tolerância de uma das partes quanto ao descumprimento de qualquer obrigação pela outra não implicará em renúncia de direito, novação ou alteração contratual tácita.</p>
+
+        <p style="text-align: left; margin-top: 30px; font-style: italic;">São Paulo - SP, ____ de ___________________ de 2026.</p>
+
+        <div class="signatures" id="area-assinaturas">
             </div>
-            
-            <div class="signature-block">
-                CONTRATANTE 02<br>
-                [Razão Social Empresa 2]
-            </div>
-
-            <div class="signature-block" style="grid-column: span 2; max-width: 300px; margin: 40px auto 0;">
-                CONTRATADO<br>
-                Robson Fernando Costa De Oliveira<br>
-                CNPJ: 45.153.364/0001-40
-            </div>
-        </div>
 
     </div>
+
+    <script>
+        // Função para atualizar textos simples no contrato
+        function updateVar(id, value) {
+            document.getElementById(id).innerText = value;
+        }
+
+        // Estado das Empresas
+        let empresas = [
+            { razao: "3 Marias", cnpj: "00.000.000/0001-00", endereco: "Rua Exemplo, 123" },
+            { razao: "Nina Ritz", cnpj: "11.111.111/0001-11", endereco: "Av. Modelo, 456" }
+        ];
+
+        // Atualiza a Interface Lateral, o Texto e as Assinaturas
+        function renderEmpresas() {
+            const listaInputs = document.getElementById("lista-empresas");
+            const textoContrato = document.getElementById("texto-contratantes");
+            const assinaturas = document.getElementById("area-assinaturas");
+            
+            listaInputs.innerHTML = "";
+            textoContrato.innerHTML = "";
+            let htmlAssinaturas = "";
+
+            empresas.forEach((emp, index) => {
+                // Renderiza Inputs na Sidebar
+                listaInputs.innerHTML += `
+                    <div class="empresa-box">
+                        <div class="input-group">
+                            <label>Razão Social ${index + 1}</label>
+                            <input type="text" value="${emp.razao}" onchange="editEmpresa(${index}, 'razao', this.value)">
+                        </div>
+                        <div class="input-group">
+                            <label>CNPJ</label>
+                            <input type="text" value="${emp.cnpj}" onchange="editEmpresa(${index}, 'cnpj', this.value)">
+                        </div>
+                        <div class="input-group">
+                            <label>Endereço</label>
+                            <input type="text" value="${emp.endereco}" onchange="editEmpresa(${index}, 'endereco', this.value)">
+                        </div>
+                        <button class="btn btn-remove" onclick="removerEmpresa(${index})">Remover</button>
+                    </div>
+                `;
+
+                // Renderiza Texto no Contrato
+                textoContrato.innerHTML += `
+                    <p><span class="highlight">CONTRATANTE ${index + 1}:</span> ${emp.razao}, inscrita no CNPJ sob o nº ${emp.cnpj}, com sede em ${emp.endereco}.</p>
+                `;
+
+                // Monta bloco de assinatura
+                htmlAssinaturas += `
+                    <div class="signature-box">
+                        <div class="signature-line">
+                            CONTRATANTE ${index + 1}<br>
+                            ${emp.razao}<br>
+                            CNPJ: ${emp.cnpj}
+                        </div>
+                    </div>
+                `;
+            });
+
+            // Adiciona a assinatura fixa do CONTRATADO no final da grade
+            htmlAssinaturas += `
+                <div class="signature-box" style="margin: 0 auto;">
+                    <div class="signature-line">
+                        CONTRATADO<br>
+                        Robson F. Costa De Oliveira<br>
+                        CNPJ: 45.153.364/0001-40
+                    </div>
+                </div>
+            `;
+            assinaturas.innerHTML = htmlAssinaturas;
+        }
+
+        // Funções de manipulação do Array
+        function editEmpresa(index, field, value) {
+            empresas[index][field] = value;
+            renderEmpresas();
+        }
+
+        function adicionarEmpresa() {
+            empresas.push({ razao: "Nova Empresa", cnpj: "00.000.000/0001-00", endereco: "Endereço" });
+            renderEmpresas();
+        }
+
+        function removerEmpresa(index) {
+            empresas.splice(index, 1);
+            renderEmpresas();
+        }
+
+        // Renderiza tudo ao carregar a página
+        window.onload = renderEmpresas;
+    </script>
 </body>
 </html>
