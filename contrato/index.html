@@ -257,11 +257,11 @@
         <p>3.5. Os valores das mensalidades poderão ser reajustados anualmente, a cada período de 12 meses, com base no índice IPCA/IBGE acumulado, ou outro que venha a substituí-lo.</p>
         
         <h2>4. SUPORTE TÉCNICO E ATUALIZAÇÕES</h2>
-        <p>4.1. A implantação contempla um período de operação assistida de até 60 (sessenta) dias corridos após o início efetivo do uso do sistema, durante o qual o suporte será prestado sem cobrança adicional.</p>
+        <p>4.1. A implantação contempla um período de operação assistida de até 45 (quarenta e cinco) dias corridos após o início efetivo do uso do sistema, durante o qual o suporte será prestado sem cobrança adicional.</p>
         <p>4.2. Após esse período, o suporte técnico, correções e atualizações passarão a depender da contratação da mensalidade descrita na Cláusula 3.3.</p>
         <p>4.3. O pacote de suporte mensal ativo abrange:</p>
         <ul>
-            <li>Atendimento técnico remoto em horário comercial (segunda a sexta-feira, das 09h às 18h);</li>
+            <li>Atendimento técnico remoto em horário comercial (segunda a sexta-feira, das 08h às 17h);</li>
             <li>Atualizações de estabilidade e novas versões do sistema;</li>
             <li>Correções de falhas reportadas (bugs).</li>
         </ul>
@@ -329,7 +329,13 @@
                 let d = Math.floor((n % 100) / 10);
                 let u = n % 10;
                 
-                if (c > 0) str += centenas[c] + (c === 1 && n > 100 ? "cento " : " ");
+                // CORREÇÃO: Lógica ajustada para a centena "cento" sem somar com "cem"
+                if (c === 1) {
+                    str += "cento ";
+                } else if (c > 1) {
+                    str += centenas[c] + " ";
+                }
+                
                 if (str !== "" && (d > 0 || u > 0)) str += "e ";
                 
                 if (d === 1) {
