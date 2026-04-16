@@ -106,6 +106,15 @@
             max-width: 210mm; /* Tamanho A4 */
             box-shadow: 0 0 15px rgba(0,0,0,0.1);
             position: relative;
+            
+            /* Novo Setup para empurrar o rodapé */
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* O conteúdo do contrato deve crescer para ocupar o espaço disponível */
+        .contract-body {
+            flex-grow: 1; 
         }
 
         .header { text-align: center; margin-bottom: 40px; }
@@ -120,8 +129,9 @@
 
         /* --- ASSINATURAS --- */
         .bloco-final {
-            padding-top: 120px; /* Empurra as assinaturas mais para baixo */
-            page-break-inside: avoid; /* Garante que não quebre no meio */
+            margin-top: auto; /* A MÁGICA AQUI: Empurra todo este bloco para o limite inferior da div pai */
+            padding-top: 80px; 
+            page-break-inside: avoid;
         }
         
         .signatures { margin-top: 50px; display: flex; flex-wrap: wrap; justify-content: space-between; gap: 20px; }
@@ -138,14 +148,15 @@
                 margin: 0;
             }
             @page {
-                /* 'margin: 0' OBRIGA O CHROME A TIRAR OS LINKS E TÍTULOS DO CABEÇALHO/RODAPÉ */
                 margin: 0; 
             }
             .main-content { 
                 margin-left: 0; 
-                padding: 20mm !important; /* Cria a margem da folha já que zeramos a do Chrome */
+                padding: 20mm !important; 
                 box-shadow: none; 
                 max-width: 100%; 
+                /* Garante que na impressão a página preencha a altura inteira */
+                min-height: calc(100vh - 40mm); 
             }
             
             #logo-rodape-print {
@@ -153,7 +164,7 @@
                 position: fixed;
                 bottom: 25px;
                 right: 30px;
-                width: 35px; /* Tamanho discreto e profissional */
+                width: 35px; 
                 height: auto;
                 z-index: 1000;
             }
@@ -214,82 +225,82 @@
     <div class="main-content">
         <img src="logo-rodape.png" id="logo-rodape-print" alt="Emblema Onion Sys">
 
-        <div class="header">
-            <img src="logo.png" alt="Onion Sys Logo">
-            <h1>Contrato de Licença de Uso de Software e Prestação de Serviços</h1>
-        </div>
-
-        <div class="contract-section">
-            <div class="parties-box">
-                <div id="texto-contratantes"></div>
-                <p><span id="txt-representacao">Neste ato representadas em conjunto e doravante denominadas simplesmente</span> <span class="highlight ref-contratante-caps">CONTRATANTES</span>.</p>
-                <hr style="border: 0; border-top: 1px solid #ddd; margin: 15px 0;">
-                <p><span class="highlight">CONTRATADO:</span> Robson Fernando Costa De Oliveira 36421493831, inscrito no CNPJ sob o nº 45.153.364/0001-40, doravante denominado simplesmente <span class="highlight">CONTRATADO</span>.</p>
+        <div class="contract-body">
+            <div class="header">
+                <img src="logo.png" alt="Onion Sys Logo">
+                <h1>Contrato de Licença de Uso de Software e Prestação de Serviços</h1>
             </div>
-        </div>
 
-        <h2>1. OBJETO</h2>
-        <p>1.1. O presente contrato tem como objeto o licenciamento do direito de uso, em caráter não exclusivo e intransferível, do sistema <strong>Onion Sys – Plataforma de Gestão Operacional</strong>, voltado especificamente para o controle de produção em confecção, gestão de estoque, ordens de serviço (OS), compras de aviamentos, relatórios analíticos e painéis de processos.</p>
-        <p>1.2. Faz parte também do objeto deste instrumento a prestação de serviços técnicos de implantação, configuração inicial, instalação e treinamento da equipa <span class="ref-das-contratantes">das CONTRATANTES</span> para o uso da referida plataforma.</p>
+            <div class="contract-section">
+                <div class="parties-box">
+                    <div id="texto-contratantes"></div>
+                    <p><span id="txt-representacao">Neste ato representadas em conjunto e doravante denominadas simplesmente</span> <span class="highlight ref-contratante-caps">CONTRATANTES</span>.</p>
+                    <hr style="border: 0; border-top: 1px solid #ddd; margin: 15px 0;">
+                    <p><span class="highlight">CONTRATADO:</span> Robson Fernando Costa De Oliveira 36421493831, inscrito no CNPJ sob o nº 45.153.364/0001-40, doravante denominado simplesmente <span class="highlight">CONTRATADO</span>.</p>
+                </div>
+            </div>
 
-        <h2>2. CONDIÇÕES DA LICENÇA DE USO</h2>
-        <p>2.1. O sistema Onion Sys, incluindo seus códigos-fonte, painéis, lógicas de banco de dados e identidade visual, é de propriedade intelectual e direitos autorais exclusivos do CONTRATADO.</p>
-        <p>2.2. É expressamente proibida a cópia, reprodução, engenharia reversa, comercialização, sublicenciamento ou distribuição do software, no todo ou em parte, <span class="ref-pelas-contratantes">pelas CONTRATANTES</span>.</p>
-        <p>2.3. O CONTRATADO detém total liberdade comercial para licenciar, instalar e negociar o sistema Onion Sys com outras empresas e terceiros, sem qualquer restrição de exclusividade de mercado ou região.</p>
+            <h2>1. OBJETO</h2>
+            <p>1.1. O presente contrato tem como objeto o licenciamento do direito de uso, em caráter não exclusivo e intransferível, do sistema <strong>Onion Sys – Plataforma de Gestão Operacional</strong>, voltado especificamente para o controle de produção em confecção, gestão de estoque, ordens de serviço (OS), compras de aviamentos, relatórios analíticos e painéis de processos.</p>
+            <p>1.2. Faz parte também do objeto deste instrumento a prestação de serviços técnicos de implantação, configuração inicial, instalação e treinamento da equipa <span class="ref-das-contratantes">das CONTRATANTES</span> para o uso da referida plataforma.</p>
 
-        <h2>3. VALORES, FATURAMENTO E FORMAS DE PAGAMENTO</h2>
-        <p>3.1. Implantação: Pelos serviços de configuração, instalação e treinamento, <span class="ref-as-contratantes">as CONTRATANTES</span> pagarão ao CONTRATADO o valor total de <strong class="highlight" id="var-valor-total">R$ 25.000,00 (vinte e cinco mil reais)</strong>.</p>
-        <p>3.2. O valor de implantação será quitado em <strong class="highlight" id="var-parcela">4 (quatro) parcelas iguais de R$ 6.250,00</strong>, com intervalo de <strong class="highlight" id="var-intervalo-dias">15 (quinze)</strong> dias entre cada uma. A primeira parcela vence na data de assinatura deste contrato.</p>
-        <p>3.3. Mensalidade de Manutenção: Para manutenção do licenciamento, suporte técnico e direito a atualizações, será cobrado o valor mensal de <strong class="highlight" id="var-mensalidade">R$ 1.000,00 (mil reais)</strong> por CNPJ cadastrado, com vencimento todo dia 10 de cada mês subsequente ao período de carência (Cláusula 4.1).</p>
-        <p>3.4. Em caso de atraso superior a 5 (cinco) dias no pagamento de qualquer obrigação, incidirá multa moratória de 2% (dois por cento) sobre o valor devido, acrescido de juros de mora de 1% (um por cento) ao mês, pro rata die.</p>
-        <p>3.5. Os valores das mensalidades serão reajustados anualmente, a cada período de 12 meses contados da assinatura deste contrato, com base no índice IPCA/IBGE acumulado no período, ou outro índice oficial que venha a substituí-lo.</p>
+            <h2>2. CONDIÇÕES DA LICENÇA DE USO</h2>
+            <p>2.1. O sistema Onion Sys, incluindo seus códigos-fonte, painéis, lógicas de banco de dados e identidade visual, é de propriedade intelectual e direitos autorais exclusivos do CONTRATADO.</p>
+            <p>2.2. É expressamente proibida a cópia, reprodução, engenharia reversa, comercialização, sublicenciamento ou distribuição do software, no todo ou em parte, <span class="ref-pelas-contratantes">pelas CONTRATANTES</span>.</p>
+            <p>2.3. O CONTRATADO detém total liberdade comercial para licenciar, instalar e negociar o sistema Onion Sys com outras empresas e terceiros, sem qualquer restrição de exclusividade de mercado ou região.</p>
 
-        <h2>4. SUPORTE TÉCNICO E ATUALIZAÇÕES</h2>
-        <p>4.1. A implantação contempla um período de carência ("Operação Assistida") de até 60 (sessenta) dias corridos após o início efetivo do uso do sistema, durante o qual o suporte e acompanhamento não terão custos adicionais mensais.</p>
-        <p>4.2. Após o período de 60 dias, os serviços de suporte, correção de eventuais inconsistências e atualizações de melhoria contínua passarão a ser cobertos pela mensalidade estipulada na Cláusula 3.3.</p>
-        <p>4.3. O pacote de suporte mensal ativo abrange:</p>
-        <ul>
-            <li>Atendimento técnico remoto em horário comercial (segunda a sexta-feira, das 09h às 18h).</li>
-            <li>Atualizações regulares de estabilidade e novas versões lançadas pelo CONTRATADO.</li>
-            <li>Correção preventiva e corretiva de falhas reportadas (bugs).</li>
-        </ul>
-        <p>4.4. O plano de licenciamento abrange o uso simultâneo em até <strong id="var-terminais">15 (quinze)</strong> terminais (máquinas/dispositivos) <span class="ref-das-contratantes">das CONTRATANTES</span>. Terminais excedentes terão o custo de <strong id="var-terminal-extra">R$ 150,00 (cento e cinquenta reais)</strong> mensais por unidade adicional.</p>
-        <p>4.5. Interrupção do Plano: Caso <span class="ref-as-contratantes">as CONTRATANTES</span> optem por cancelar o plano de mensalidade e suporte, o sistema Onion Sys continuará em pleno funcionamento operacional. Contudo, <span class="ref-as-contratantes">as CONTRATANTES</span> perderão o direito a qualquer tipo de suporte técnico, correções, ajustes de layout e atualizações futuras.</p>
-        <p>4.6. Solicitações de atendimento ou customização de escopo que ocorram fora de um plano mensal ativo serão orçadas e cobradas no valor de R$ 150,00 por hora técnica, sujeitas à disponibilidade de agenda do CONTRATADO.</p>
+            <h2>3. VALORES, FATURAMENTO E FORMAS DE PAGAMENTO</h2>
+            <p>3.1. Implantação: Pelos serviços de configuração, instalação e treinamento, <span class="ref-as-contratantes">as CONTRATANTES</span> pagarão ao CONTRATADO o valor total de <strong class="highlight" id="var-valor-total">R$ 25.000,00 (vinte e cinco mil reais)</strong>.</p>
+            <p>3.2. O valor de implantação será quitado em <strong class="highlight" id="var-parcela">4 (quatro) parcelas iguais de R$ 6.250,00</strong>, com intervalo de <strong class="highlight" id="var-intervalo-dias">15 (quinze)</strong> dias entre cada uma. A primeira parcela vence na data de assinatura deste contrato.</p>
+            <p>3.3. Mensalidade de Manutenção: Para manutenção do licenciamento, suporte técnico e direito a atualizações, será cobrado o valor mensal de <strong class="highlight" id="var-mensalidade">R$ 1.000,00 (mil reais)</strong> por CNPJ cadastrado, com vencimento todo dia 10 de cada mês subsequente ao período de carência (Cláusula 4.1).</p>
+            <p>3.4. Em caso de atraso superior a 5 (cinco) dias no pagamento de qualquer obrigação, incidirá multa moratória de 2% (dois por cento) sobre o valor devido, acrescido de juros de mora de 1% (um por cento) ao mês, pro rata die.</p>
+            <p>3.5. Os valores das mensalidades serão reajustados anualmente, a cada período de 12 meses contados da assinatura deste contrato, com base no índice IPCA/IBGE acumulado no período, ou outro índice oficial que venha a substituí-lo.</p>
 
-        <h2>5. CRONOGRAMA E DINÂMICA DE IMPLANTAÇÃO</h2>
-        <p>5.1. O início do processo de implantação está agendado para a semana do dia <strong id="var-data-impl">27 de abril de 2026</strong>.</p>
-        <p>5.2. O escopo de implantação abrange: instalação do ambiente do sistema, parametrizações iniciais do banco de dados e ciclo de treinamento da equipa usuária.</p>
-        <p>5.3. Para mitigar o impacto na operação da loja/fábrica, os treinamentos serão realizados preferencialmente aos sábados na fase inicial, ou durante a semana, de acordo com o alinhamento prévio e disponibilidade de ambas as partes.</p>
-        <p>5.4. Atrasos na disponibilização de informações, infraestrutura ou ausência da equipa <span class="ref-das-contratantes">das CONTRATANTES</span> nas datas de treinamento eximem o CONTRATADO de responsabilidade sobre possíveis atrasos no cronograma final de entrega.</p>
+            <h2>4. SUPORTE TÉCNICO E ATUALIZAÇÕES</h2>
+            <p>4.1. A implantação contempla um período de carência ("Operação Assistida") de até 60 (sessenta) dias corridos após o início efetivo do uso do sistema, durante o qual o suporte e acompanhamento não terão custos adicionais mensais.</p>
+            <p>4.2. Após o período de 60 dias, os serviços de suporte, correção de eventuais inconsistências e atualizações de melhoria contínua passarão a ser cobertos pela mensalidade estipulada na Cláusula 3.3.</p>
+            <p>4.3. O pacote de suporte mensal ativo abrange:</p>
+            <ul>
+                <li>Atendimento técnico remoto em horário comercial (segunda a sexta-feira, das 09h às 18h).</li>
+                <li>Atualizações regulares de estabilidade e novas versões lançadas pelo CONTRATADO.</li>
+                <li>Correção preventiva e corretiva de falhas reportadas (bugs).</li>
+            </ul>
+            <p>4.4. O plano de licenciamento abrange o uso simultâneo em até <strong id="var-terminais">15 (quinze)</strong> terminais (máquinas/dispositivos) <span class="ref-das-contratantes">das CONTRATANTES</span>. Terminais excedentes terão o custo de <strong id="var-terminal-extra">R$ 150,00 (cento e cinquenta reais)</strong> mensais por unidade adicional.</p>
+            <p>4.5. Interrupção do Plano: Caso <span class="ref-as-contratantes">as CONTRATANTES</span> optem por cancelar o plano de mensalidade e suporte, o sistema Onion Sys continuará em pleno funcionamento operacional. Contudo, <span class="ref-as-contratantes">as CONTRATANTES</span> perderão o direito a qualquer tipo de suporte técnico, correções, ajustes de layout e atualizações futuras.</p>
+            <p>4.6. Solicitações de atendimento ou customização de escopo que ocorram fora de um plano mensal ativo serão orçadas e cobradas no valor de R$ 150,00 por hora técnica, sujeitas à disponibilidade de agenda do CONTRATADO.</p>
 
-        <h2>6. NÍVEIS DE ATENDIMENTO (SLA)</h2>
-        <p>6.1. O suporte será prestado exclusivamente em dias úteis, em horário comercial, utilizando preferencialmente o canal WhatsApp ou acesso remoto previamente autorizado.</p>
-        <p>6.2. Para garantir agilidade e controle, as solicitações de suporte deverão ser unificadas e reportadas ao CONTRATADO exclusivamente por 1 (um) ou 2 (dois) colaboradores chave, previamente designados pela diretoria <span class="ref-das-contratantes">das CONTRATANTES</span>.</p>
-        <p>6.3. As demandas serão priorizadas conforme o nível de urgência, sendo paradas totais de sistema classificadas como prioridade máxima frente a dúvidas operacionais.</p>
+            <h2>5. CRONOGRAMA E DINÂMICA DE IMPLANTAÇÃO</h2>
+            <p>5.1. O início do processo de implantação está agendado para a semana do dia <strong id="var-data-impl">27 de abril de 2026</strong>.</p>
+            <p>5.2. O escopo de implantação abrange: instalação do ambiente do sistema, parametrizações iniciais do banco de dados e ciclo de treinamento da equipa usuária.</p>
+            <p>5.3. Para mitigar o impacto na operação da loja/fábrica, os treinamentos serão realizados preferencialmente aos sábados na fase inicial, ou durante a semana, de acordo com o alinhamento prévio e disponibilidade de ambas as partes.</p>
+            <p>5.4. Atrasos na disponibilização de informações, infraestrutura ou ausência da equipa <span class="ref-das-contratantes">das CONTRATANTES</span> nas datas de treinamento eximem o CONTRATADO de responsabilidade sobre possíveis atrasos no cronograma final de entrega.</p>
 
-        <h2>7. RESPONSABILIDADES E LIMITAÇÕES</h2>
-        <p>7.1. Do CONTRATADO: Manter a integridade e disponibilidade do software conforme as especificações contratadas, agindo com diligência na correção de falhas técnicas reportadas.</p>
-        <p>7.2. <span class="highlight ref-das-contratantes-cap">Das CONTRATANTES</span>: Fornecer hardware (computadores) e infraestrutura de rede (internet local) adequados e compatíveis com as exigências web do sistema, bem como assegurar que sua equipa opere a ferramenta de forma correta, não sendo o CONTRATADO responsável por dados inseridos erroneamente.</p>
-        <p>7.3. O CONTRATADO não será civilmente responsável por eventuais perdas e danos, lucros cessantes ou prejuízos indiretos decorrentes de manutenções programadas, falhas de conexão de internet <span class="ref-das-contratantes">das CONTRATANTES</span> ou problemas em servidores de hospedagem terceirizados de alta disponibilidade.</p>
+            <h2>6. NÍVEIS DE ATENDIMENTO (SLA)</h2>
+            <p>6.1. O suporte será prestado exclusivamente em dias úteis, em horário comercial, utilizando preferencialmente o canal WhatsApp ou acesso remoto previamente autorizado.</p>
+            <p>6.2. Para garantir agilidade e controle, as solicitações de suporte deverão ser unificadas e reportadas ao CONTRATADO exclusivamente por 1 (um) ou 2 (dois) colaboradores chave, previamente designados pela diretoria <span class="ref-das-contratantes">das CONTRATANTES</span>.</p>
+            <p>6.3. As demandas serão priorizadas conforme o nível de urgência, sendo paradas totais de sistema classificadas como prioridade máxima frente a dúvidas operacionais.</p>
 
-        <h2>8. CONFIDENCIALIDADE E TRATAMENTO DE DADOS (LGPD)</h2>
-        <p>8.1. As partes comprometem-se a manter sob sigilo todas as informações comerciais, estratégicas, de produção e dados de clientes que venham a ter acesso em virtude deste contrato.</p>
-        <p>8.2. O CONTRATADO tratará os dados inseridos no sistema <span class="ref-pelas-contratantes">pelas CONTRATANTES</span> como estritamente confidenciais, atuando unicamente como operador tecnológico, em conformidade com as diretrizes da Lei Geral de Proteção de Dados (Lei 13.709/2018).</p>
+            <h2>7. RESPONSABILIDADES E LIMITAÇÕES</h2>
+            <p>7.1. Do CONTRATADO: Manter a integridade e disponibilidade do software conforme as especificações contratadas, agindo com diligência na correção de falhas técnicas reportadas.</p>
+            <p>7.2. <span class="highlight ref-das-contratantes-cap">Das CONTRATANTES</span>: Fornecer hardware (computadores) e infraestrutura de rede (internet local) adequados e compatíveis com as exigências web do sistema, bem como assegurar que sua equipa opere a ferramenta de forma correta, não sendo o CONTRATADO responsável por dados inseridos erroneamente.</p>
+            <p>7.3. O CONTRATADO não será civilmente responsável por eventuais perdas e danos, lucros cessantes ou prejuízos indiretos decorrentes de manutenções programadas, falhas de conexão de internet <span class="ref-das-contratantes">das CONTRATANTES</span> ou problemas em servidores de hospedagem terceirizados de alta disponibilidade.</p>
 
-        <h2>9. PRAZOS E RESCISÃO</h2>
-        <p>9.1. O presente instrumento é celebrado por prazo indeterminado, entrando em vigor na data de sua assinatura.</p>
-        <p>9.2. A contratação do suporte mensal poderá ser cancelada a qualquer momento, mediante envio de aviso prévio formal com 30 (trinta) dias de antecedência. O aviso prévio não isenta <span class="ref-as-contratantes">as CONTRATANTES</span> do pagamento das mensalidades ou faturas ativas vigentes dentro desse período de 30 dias.</p>
+            <h2>8. CONFIDENCIALIDADE E TRATAMENTO DE DADOS (LGPD)</h2>
+            <p>8.1. As partes comprometem-se a manter sob sigilo todas as informações comerciais, estratégicas, de produção e dados de clientes que venham a ter acesso em virtude deste contrato.</p>
+            <p>8.2. O CONTRATADO tratará os dados inseridos no sistema <span class="ref-pelas-contratantes">pelas CONTRATANTES</span> como estritamente confidenciais, atuando unicamente como operador tecnológico, em conformidade com as diretrizes da Lei Geral de Proteção de Dados (Lei 13.709/2018).</p>
 
-        <h2>10. FUNCIONALIDADES SOB DEMANDA (CUSTOMIZAÇÕES)</h2>
-        <p>10.1. Novas funcionalidades, integrações de terceiros ou relatórios que não estejam presentes na arquitetura nativa do sistema na data da implantação serão considerados "Novos Projetos".</p>
-        <p>10.2. Solicitações de Novos Projetos deverão ser documentadas, submetidas a análise de viabilidade técnica pelo CONTRATADO e executadas mediante aprovação prévia de orçamento extra e prazo <span class="ref-pelas-contratantes">pelas CONTRATANTES</span>.</p>
+            <h2>9. PRAZOS E RESCISÃO</h2>
+            <p>9.1. O presente instrumento é celebrado por prazo indeterminado, entrando em vigor na data de sua assinatura.</p>
+            <p>9.2. A contratação do suporte mensal poderá ser cancelada a qualquer momento, mediante envio de aviso prévio formal com 30 (trinta) dias de antecedência. O aviso prévio não isenta <span class="ref-as-contratantes">as CONTRATANTES</span> do pagamento das mensalidades ou faturas ativas vigentes dentro desse período de 30 dias.</p>
 
-        <h2>11. DISPOSIÇÕES FINAIS</h2>
-        <p>11.1. Este contrato tem natureza estritamente comercial, civil e tecnológica, não gerando, sob nenhuma hipótese, qualquer vínculo empregatício, societário ou previdenciário entre <span class="ref-as-contratantes">as CONTRATANTES</span>, o CONTRATADO ou seus respectivos prepostos e funcionários.</p>
-        <p>11.2. A tolerância de uma das partes quanto ao descumprimento de qualquer obrigação pela outra não implicará em renúncia de direito, novação ou alteração contratual tácita.</p>
+            <h2>10. FUNCIONALIDADES SOB DEMANDA (CUSTOMIZAÇÕES)</h2>
+            <p>10.1. Novas funcionalidades, integrações de terceiros ou relatórios que não estejam presentes na arquitetura nativa do sistema na data da implantação serão considerados "Novos Projetos".</p>
+            <p>10.2. Solicitações de Novos Projetos deverão ser documentadas, submetidas a análise de viabilidade técnica pelo CONTRATADO e executadas mediante aprovação prévia de orçamento extra e prazo <span class="ref-pelas-contratantes">pelas CONTRATANTES</span>.</p>
 
-        <div class="bloco-final">
+            <h2>11. DISPOSIÇÕES FINAIS</h2>
+            <p>11.1. Este contrato tem natureza estritamente comercial, civil e tecnológica, não gerando, sob nenhuma hipótese, qualquer vínculo empregatício, societário ou previdenciário entre <span class="ref-as-contratantes">as CONTRATANTES</span>, o CONTRATADO ou seus respectivos prepostos e funcionários.</p>
+            <p>11.2. A tolerância de uma das partes quanto ao descumprimento de qualquer obrigação pela outra não implicará em renúncia de direito, novação ou alteração contratual tácita.</p>
+        </div><div class="bloco-final">
             <p style="text-align: left; font-style: italic;">São Paulo - SP, ____ de ___________________ de 2026.</p>
 
             <div class="signatures" id="area-assinaturas"></div>
