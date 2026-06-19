@@ -1,4 +1,4 @@
-const API_NOVERA = "http://localhost:3000/api";
+const API_NOVERA = "[https://bdfernando.alwaysdata.net/api](https://bdfernando.alwaysdata.net/api)";
 
 let TOKEN_ONIONSYS = localStorage.getItem('novera_onionsys_key') || "";
 let KEY_IMGBB = localStorage.getItem('novera_imgbb_key') || "";
